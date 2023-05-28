@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background-color: black;
+      overflow: hidden;
+    }
+    #loaderContainer {
+      width: 400px;
+      height: 20px;
+      background-color: black;
+      border-radius: 10px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      display: none;
+    }
+    #loader {
+      width: 0%;
+      height: 100%;
+      background-color: red;
+      position: relative;
+      animation: loaderAnimation 2s linear;
+    }
+    .heart {
+      display: inline-block;
+      font-size: 16px;
+      animation: heartAnimation 0.5s infinite;
+    }
+    .text {
+      color: red;
+      font-size: 36px;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+    }
+    .heartbeat {
+      animation: heartbeatAnimation 1s infinite;
+    }
+    #text1 {
+      top: 85%;
+    }
+    #text2 {
+      top: 35%;
+      overflow: hidden;
+      white-space: pre-wrap;
+      border-right: none;
+    }
+    .typing-animation {
+      animation: typingAnimation 4s steps(40);
+    }
+    #startButton {
+      font-size: 24px;
+      width: 200px;
+      height: 60px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 10px;
+      background-color: red;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #startButton:hover {
+      background-color: #ff4444;
+    }
+
+    #heartRain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    @keyframes loaderAnimation {
+      0% {
+        width: 0%;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    @keyframes heartAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes heartRainAnimation {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+      }
+    }
+
+    @keyframes heartbeatAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes typingAnimation {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+  </style>
+  <script>
+    function startMusic() {
+      var btn = document.getElementById("startButton");
+      var loaderContainer = document.getElementById("loaderContainer");
+      var text1 = document.getElementById("text1");
+      var text2 = document.getElementById("text2");
+
+      btn.style.display = "none";
+      loaderContainer.style.display = "block";
+
+      setTimeout(function() {
+        loaderContainer.style.display = "none";
+        text1.style.opacity = "1";
+        text2.style.opacity = "1";
+      }, 2000);
+
+      var audio = new Audio();
+      audio.src = "https://example.com/Dx.mp3"; // Substitua com a URL do arquivo de áudio hospedado
+
+      audio.oncanplaythrough = function() {
+        audio.play();
+      };
+    }
+
+    function updateLoader() {
+      var loader = document.getElementById("loader");
+      var totalEmojis = 45; // Quantidade total de emojis de coração
+      var filledPercentage = 0;
+      var emojiCount = 0;
+
+      var emojiInterval = setInterval(function() {
+        filledPercentage += 10;
+        var emojis = "";
+        var emojisToShow = Math.ceil(totalEmojis * (filledPercentage / 100));
+
+        for (var i = 0; i < emojisToShow; i++) {
+          emojis += "&#x2764;&#xFE0F;";
+          emojiCount++;
+        }
+
+        loader.style.width = filledPercentage + "%";
+        loader.innerHTML = emojis;
+
+        if (emojiCount >= totalEmojis) {
+          clearInterval(emojiInterval);
+          addHeartEmojis();
+        }
+      }, 200);
+
+      loader.innerHTML = "&#x2764;&#xFE0F;";
+    }
+
+    function addHeartEmojis() {
+      var loader = document.getElementById("loader");
+      var heartEmojis = "";
+      var totalEmojis = 46; // Quantidade total de emojis de coração
+
+      for (var i = 0; i < totalEmojis; i++) {
+        heartEmojis += "&#x2764;&#xFE0F;";
+      }
+
+      loader.innerHTML = heartEmojis;
+    }
+
+    function createHeart() {
+      var heart = document.createElement("span");
+      heart.className = "heart";
+      heart.innerHTML = "&#x2764;&#xFE0F;";
+      heart.style.fontSize = Math.random() * 20 + 10 + "px";
+      heart.style.position = "absolute";
+      heart.style.top = "-20px";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.opacity = Math.random();
+      heart.style.animation = "heartRainAnimation 1.5s linear infinite";
+
+      document.getElementById("heartRain").appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 3000);
+    }
+
+    setInterval(createHeart, 200);
+  </script>
+</head>
+<body>
+  <button id="startButton" onclick="startMusic()">SEGREDU....</button>
+  <div id="loaderContainer">
+    <div id="loader"></div>
+  </div>
+  <div id="text1" class="text heartbeat" style="font-family: 'Cookie', cursive;">EU TE AMO, ANDRESSA</div>
+  <div id="text2" class="text typing"></div>
+  <div id="heartRain"></div>
+
+  <script>
+    updateLoader();
+
+    var text2 = document.getElementById("text2");
+    var textToType = "Eu te amo exatamente como você é, e sei que você também me ama. Nossa conexão é única e especial.\n\nÀs vezes, lembro-me do passado e de como você me fez sorrir nos momentos em que eu mais precisava. Seu carinho trouxe tranquilidade ao meu coração. Com gestos simples, você me lembrou que é possível encontrar felicidade, mesmo quando enfrentamos desafios.\n\nEu agradeço a Deus por ter você em minha vida. Você me completa de uma maneira que ninguém mais pode. O amor que compartilhamos é verdadeiro, e sou grato todos os dias por ter você ao meu lado.\n\nCom todo o meu coração.\n";
+
+    var index = 0;
+    var typingInterval = setInterval(function() {
+      text2.innerHTML += textToType.charAt(index);
+      index++;
+
+      if (index >= textToType.length) {
+        clearInterval(typingInterval);
+      }
+    }, 100);
+  </script>
+</body>
+</html>
